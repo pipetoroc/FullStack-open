@@ -40,6 +40,8 @@ const App = () => {
     setPoints(copy)
     console.log(copy)
   }
+  const maxVote = Math.max(...Object.values(points))
+  const maxKey = Object.keys(points).find(key => points[key] === maxVote)
 
   return (
     <div>
@@ -53,6 +55,9 @@ const App = () => {
       />
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected] ?? 0} votes</p>
+
+      <h2>Anecdotes with most votes</h2>
+      <p>{anecdotes[maxKey]}</p>
     </div>
   )
 }

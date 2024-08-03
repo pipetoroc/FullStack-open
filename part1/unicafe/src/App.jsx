@@ -8,18 +8,50 @@ const Button = (props) => {
   )
 }
 
-const Statics = (props) => {
+const StatisticsLine = (props) => {
   return(
-    <div>
-      <h2>Statics</h2>
-      <p>Good {props.good}</p>
-      <p>Neutral {props.neutral}</p>
-      <p>Bad {props.bad}</p>
-      <p>all {props.all}</p>
-      <p>average {props.average}</p>
-      <p>positives {props.positives} %</p>
-    </div>
+    <p>{props.text} {props.good}</p>
   )
+}
+
+const Statics = (props) => {
+  
+  if(props.all !== 0){
+    return(
+      <div>
+        <h2>Statistics</h2>
+        <StatisticsLine
+          text='Good'
+          good={props.good}
+        />
+        <StatisticsLine
+          text='Neutral'
+          neutral={props.neutral}
+        />
+        <StatisticsLine
+          text='Bad'
+          bad={props.bad}
+        />
+        <StatisticsLine
+          text='All'
+          all={props.all}
+        />
+        <StatisticsLine
+          text='Average'
+          average={props.average}
+        />
+        <StatisticsLine
+          text='Positives'
+          positives={`${props.positives} %`}
+        />
+      </div>
+  )} else{
+    return (
+      <div>
+        <h2>Statistics</h2>
+        <p>No Feedback given</p>
+      </div>)
+  }
 }
 
 const App = () => {

@@ -22,19 +22,37 @@ const App = () => {
   ]
   
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState({})
   
   const generateAnecdote = () => {
-    const random = Math.floor(Math.random()*8)
+    const random = Math.floor(Math.random()*anecdotes.length)
     setSelected(random)
-
+    console.log(random)
   }
+
+  const vote = () => {
+    const copy = {...points}
+    if(copy.hasOwnProperty(selected)){
+      copy[selected] +=1
+    } else{
+      copy[selected] = 1
+    }
+    setPoints(copy)
+    console.log(copy)
+  }
+
   return (
     <div>
       <Button
         text = 'Next anecdote'
         onClick = {generateAnecdote}
       />
+      <Button
+        text = 'Vote'
+        onClick={vote}
+      />
       <p>{anecdotes[selected]}</p>
+      <p>has {points[selected] ?? 0} votes</p>
     </div>
   )
 }

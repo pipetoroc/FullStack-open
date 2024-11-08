@@ -4,11 +4,11 @@ function Content(props) {
   console.log(props, 'content');
 
   return (
-    <div>
+    <ul>
       {
-        props.parts.map(part => <li key={part.id}> {part.name}: {part.exercises} </li>)
+        props.parts.map(part => <Part part={part.name} exercise={part.exercises} key={part.id} />)
       }
-    </div>
+    </ul>
   )
 }
 

@@ -1,5 +1,4 @@
 function Part(props) {
-    console.log(props, 'part');
 
     return (
         <li>

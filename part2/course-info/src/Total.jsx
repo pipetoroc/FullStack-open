@@ -1,6 +1,5 @@
 
 function Total(props) {
-  console.log(props, 'exercises');
 
   return (
     <p>

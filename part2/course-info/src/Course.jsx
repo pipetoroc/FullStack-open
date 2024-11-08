@@ -3,7 +3,6 @@ import Header from './Header'
 import Content from './Content'
 
 function Course(props) {
-    console.log(props, 'Course');
 
     return (
         <>

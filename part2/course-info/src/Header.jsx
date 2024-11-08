@@ -1,6 +1,4 @@
-
 function Header(props) {
-  console.log(props, 'header');
 
   return (
     <h1> {props.title} </h1>
@@ -8,3 +6,4 @@ function Header(props) {
 }
 
 export default Header
+

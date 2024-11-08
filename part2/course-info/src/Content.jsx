@@ -2,7 +2,6 @@ import Part from "./Part"
 import Total from "./Total"
 
 function Content(props) {
-  console.log(props, 'content');
 
   return (
     <>

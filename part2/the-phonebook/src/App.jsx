@@ -17,20 +17,36 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+
     const newPerson = {
       name: newName,
       number: newNumber
     }
 
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
+    const checkName = persons.find(p => p.name.toLowerCase() === newName.toLowerCase())
+    console.log(checkName);
 
-    personService
-      .create(newPerson)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-      })
+
+    if (checkName) {
+      const changedName = { ...checkName, number: checkName.number = newNumber }
+      personService
+        .update(checkName.id, changedName)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.name.toLowerCase() === newName.toLowerCase() ? returnedPerson : person))
+        })
+      setNewName('')
+      setNewNumber('')
+    } else {
+      setPersons(persons.concat(newPerson))
+      setNewName('')
+      setNewNumber('')
+
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+        })
+    }
   }
 
   const deletePerson = (id, name) => {

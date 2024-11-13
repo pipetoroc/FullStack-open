@@ -31,19 +31,24 @@ const App = () => {
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
       })
+  }
 
+  const deletePerson = (id, name) => {
+    window.confirm(`Do you really want delete ${name}`)
+
+    personService
+      .remove(id)
+
+    setPersons(persons.filter(p => p.id !== id))
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = event => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
-
 
 
   return (
@@ -67,7 +72,11 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
+      {persons.map(person =>
+        <li key={person.name}>{person.name} {person.number}
+          <button onClick={() => deletePerson(person.id, person.name)}>Delete</button>
+        </li>
+      )}
     </div>
   )
 }

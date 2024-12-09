@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
-
+import { Notification } from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [showNotification, setShowNotification] = useState(false)
+  const [updatedName, setUpdatedName] = useState('')
 
   useEffect(() => {
     personService
@@ -24,11 +26,11 @@ const App = () => {
     }
 
     const checkName = persons.find(p => p.name.toLowerCase() === newName.toLowerCase())
-    console.log(checkName);
-
+    console.log(checkName, name, newName);
 
     if (checkName) {
       const changedName = { ...checkName, number: checkName.number = newNumber }
+      showUpdateNotification(newName)
       personService
         .update(checkName.id, changedName)
         .then(returnedPerson => {
@@ -38,6 +40,7 @@ const App = () => {
       setNewNumber('')
     } else {
       setPersons(persons.concat(newPerson))
+      showUpdateNotification(newPerson)
       setNewName('')
       setNewNumber('')
 
@@ -51,7 +54,6 @@ const App = () => {
 
   const deletePerson = (id, name) => {
     window.confirm(`Do you really want delete ${name}`)
-
     personService
       .remove(id)
 
@@ -67,9 +69,22 @@ const App = () => {
   }
 
 
+  const showUpdateNotification = (name) => {
+    setUpdatedName(name)
+    setShowNotification(true)
+    setTimeout(() => {
+      setShowNotification(false)
+    }, 5000)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      {
+        showNotification && <Notification name={updatedName} number={newNumber} />
+      }
+
+
       <form onSubmit={addPerson}>
         <div>
           name:
@@ -87,6 +102,7 @@ const App = () => {
           <button type="submit"> add </button>
         </div>
       </form>
+
       <h2>Numbers</h2>
       {persons.map(person =>
         <li key={person.name}>{person.name} {person.number}

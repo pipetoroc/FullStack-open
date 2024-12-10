@@ -1,17 +1,16 @@
-import './Notification.css'
+import './Notification.css';
 
-const Notification = ({ name, number }) => {
-    if (number) {
-        return (<div>
-            <h2 className='success'>Add {name} </h2>
-        </div>
-        )
-    } else {
-        return (<div>
-            <h2 className='success'>Updated {name} number</h2>
-        </div>
-        )
-    }
-}
+const Notification = ({ notification }) => {
+    if (!notification.message) return null;
 
-export { Notification }
+    const { message, type } = notification;
+    const className = `notification ${type}`;
+
+    return (
+        <div className={className}>
+            <h2>{message}</h2>
+        </div>
+    );
+};
+
+export { Notification };

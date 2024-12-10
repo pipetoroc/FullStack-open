@@ -7,7 +7,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showNotification, setShowNotification] = useState(false)
-  const [updatedName, setUpdatedName] = useState('')
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   useEffect(() => {
     personService
@@ -18,48 +18,55 @@ const App = () => {
   }, [])
 
   const addPerson = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const newPerson = {
-      name: newName,
-      number: newNumber
-    }
-
-    const checkName = persons.find(p => p.name.toLowerCase() === newName.toLowerCase())
-    console.log(checkName, name, newName);
+    const newPerson = { name: newName, number: newNumber };
+    const checkName = persons.find(p => p.name.toLowerCase() === newName.toLowerCase());
 
     if (checkName) {
-      const changedName = { ...checkName, number: checkName.number = newNumber }
-      showUpdateNotification(newName)
+      const changedName = { ...checkName, number: newNumber };
+
       personService
         .update(checkName.id, changedName)
         .then(returnedPerson => {
-          setPersons(persons.map(person => person.name.toLowerCase() === newName.toLowerCase() ? returnedPerson : person))
+          setPersons(persons.map(person => person.id === checkName.id ? returnedPerson : person));
+          showUpdateNotification(`Updated ${newName}`, 'success');
         })
-      setNewName('')
-      setNewNumber('')
-    } else {
-      setPersons(persons.concat(newPerson))
-      showUpdateNotification(newPerson)
-      setNewName('')
-      setNewNumber('')
+        .catch(error => {
+          showUpdateNotification(`Failed to update ${newName}. Contact might have been removed from the server.`, 'error');
+          setPersons(persons.filter(p => p.id !== checkName.id));
+        });
 
+      setNewName('');
+      setNewNumber('');
+    } else {
       personService
         .create(newPerson)
         .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
+          setPersons(persons.concat(returnedPerson));
+          showUpdateNotification(`Added ${returnedPerson.name}`, 'success');
+          setNewName('');
+          setNewNumber('');
         })
+        .catch(error => {
+          showUpdateNotification(`Failed to add contact: ${error.message}`, 'error');
+        });
     }
-  }
+  };
 
   const deletePerson = (id, name) => {
-    window.confirm(`Do you really want delete ${name}`)
-    personService
-      .remove(id)
-
-    setPersons(persons.filter(p => p.id !== id))
-  }
-
+    if (window.confirm(`Do you really want to delete ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id));
+          showUpdateNotification(`Deleted ${name}`, 'success');
+        })
+        .catch(error => {
+          showUpdateNotification(`Failed to delete ${name}: ${error.message}`, 'error');
+        });
+    }
+  };
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -69,48 +76,42 @@ const App = () => {
   }
 
 
-  const showUpdateNotification = (name) => {
-    setUpdatedName(name)
-    setShowNotification(true)
+  const showUpdateNotification = (message, type) => {
+    setNotification({ message, type });
+    setShowNotification(true);
     setTimeout(() => {
-      setShowNotification(false)
-    }, 5000)
-  }
+      setShowNotification(false);
+      setNotification({ message: '', type: '' });
+    }, 7000);
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      {
-        showNotification && <Notification name={updatedName} number={newNumber} />
-      }
-
-
+      {showNotification && <Notification notification={notification} />}
       <form onSubmit={addPerson}>
         <div>
           name:
-          <input
-            onChange={handleNameChange}
-            value={newName}
-          />
+          <input onChange={handleNameChange} value={newName} />
           number:
-          <input
-            onChange={handleNumberChange}
-            value={newNumber}
-          />
+          <input onChange={handleNumberChange} value={newNumber} />
         </div>
         <div>
-          <button type="submit"> add </button>
+          <button type="submit">Add</button>
         </div>
       </form>
 
       <h2>Numbers</h2>
-      {persons.map(person =>
-        <li key={person.name}>{person.name} {person.number}
-          <button onClick={() => deletePerson(person.id, person.name)}>Delete</button>
-        </li>
-      )}
+      <ul>
+        {persons.map(person => (
+          <li key={person.id}>
+            {person.name} {person.number}
+            <button onClick={() => deletePerson(person.id, person.name)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
 
 export default App

@@ -1,5 +1,6 @@
-const Result = ({ countries, search }) => {
-    console.log(search, 'search');
+import DetailOfCountry from "./DetailOfCountry";
+
+const ListOfCountries = ({ countries, search }) => {
 
     const findMatches = () => {
         if (search.length === 0) return []
@@ -22,8 +23,21 @@ const Result = ({ countries, search }) => {
                     ))}
                 </ul>
             )}
+            {matches.length === 1 && (
+                <div>
+                    <h2>{matches[0].name.common}</h2>
+                    <p><strong>Capital: </strong> {matches[0].capital}</p>
+                    <p><strong>Area: </strong> {matches[0].area}</p>
+                    <h2>Languages</h2>
+                    <ul>
+                        {Object.entries(matches[0].languages).map(entry => <li key={entry[0]}> {entry[1]} </li>
+                        )}
+                    </ul>
+                    <img src={matches[0].flags.svg} alt="Bandera do pais" />
+                </div>
+            )}
         </div>
     )
 }
 
-export default Result
+export default ListOfCountries

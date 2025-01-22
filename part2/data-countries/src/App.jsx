@@ -7,7 +7,6 @@ import getCountries from './components/services/getCountries'
 function App() {
   const [search, setSearch] = useState([])
   const [countries, setCountries] = useState([])
-  const [result, setResult] = useState([])
 
   useEffect(() => {
     getCountries().then((data) => {

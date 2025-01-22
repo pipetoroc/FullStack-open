@@ -1,4 +1,4 @@
-const API = '125f79c4bbc76005bd37ada5db7e73ee'
+const API = import.meta.env.VITE_SOME_KEY
 
 function getWeather({ lat, lon }) {
     console.log(lat, lon);
